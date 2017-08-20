@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define NUM_ELEMENTS 1024
+#define NUM_ELEMENTS 102400
 char* read_source(const char* filename) {
   FILE *h = fopen(filename, "r");
   fseek(h, 0, SEEK_END);
@@ -66,11 +66,11 @@ int main() {
   clSetKernelArg(kernel, 2, sizeof(cl_mem), &output);
 
   size_t work_units = NUM_ELEMENTS;
-  time_t now1, later1;
+  clock_t t0, t1;
 
-  time(&now1);
+  t0 = clock();
   clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &work_units, NULL, 0, NULL, NULL);
-  time(&later1);
+  t1 = clock();
 
   cl_float results[NUM_ELEMENTS];
   clEnqueueReadBuffer(queue, output, CL_TRUE, 0, sizeof(cl_float) * NUM_ELEMENTS,
@@ -84,12 +84,16 @@ int main() {
   clReleaseCommandQueue(queue);
   clReleaseContext(context);
 
-  time_t diff1 = later1 - now1;
-  printf("%ld\n", (long)diff1);
+  clock_t delta1 = t1 - t0;
+  printf("gpu took: %Lf\n", (long double)(delta1));
 
-  // for (int i = 0; i < NUM_ELEMENTS; ++i) {
-  //   printf("%f * %f = %f\n", a[i], b[i], results[i]);
-  // }
+  t0 = clock();
+  for (int i = 0; i < NUM_ELEMENTS; ++i) {
+    results[i] = a[i] * b[i];
+  }
+  t1 = clock();
+  clock_t delta2 = t1 - t0;
+  printf("cpu took: %Lf\n", (long double)(delta2));
 
   return 0;
 }
