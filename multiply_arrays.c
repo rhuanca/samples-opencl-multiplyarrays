@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 
-#define NUM_ELEMENTS 10
+#define NUM_ELEMENTS 1024
 char* read_source(const char* filename) {
   FILE *h = fopen(filename, "r");
   fseek(h, 0, SEEK_END);
@@ -35,7 +35,7 @@ void random_fill(cl_float array[], size_t size) {
 int main() {
   cl_platform_id platform;
   clGetPlatformIDs(1, &platform, NULL);
-/*
+
   cl_device_id device;
   clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, NULL);
 
@@ -82,6 +82,6 @@ int main() {
   for (int i = 0; i < NUM_ELEMENTS; ++i) {
     printf("%f * %f = %f\n", a[i], b[i], results[i]);
   }
-*/
+
   return 0;
 }
