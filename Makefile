@@ -4,6 +4,7 @@ else
 	LIBS=-lOpenCL
 endif
 
-target/multiply_arrays: multiply_arrays.c
+target/multiply:
 	mkdir -p target
 	gcc -std=c99 multiply_arrays.c $(LIBS) -o target/multiply_arrays
+	gcc -std=c99 multiply_arrays_compare.c $(LIBS) -o target/multiply_arrays_compare
